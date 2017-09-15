@@ -1,25 +1,25 @@
 ---
 title: "First Steps With Go"
 date: 2017-09-10T18:03:18-06:00
-draft: true
+draft: false
+tags: ["go"]
+categories: ["tutorials", "development"]
 ---
-Go is a simple and powerful programming language. It has a bunch of great features such as static types, memory safety, garbage collection, and it is targets concurrent programming. I discovered very recently, so I want to start simple and learn the basics of this language. In this post, we will write our first Go program and library. Also, we will learn how to unit tests our Go programs.
+Go is a simple and powerful programming language. Its syntax is familiar to C/C++ but it definately has improvements in comparison. It has a bunch of great features such as static types, memory safety, garbage collection, and it is targeted to concurrent programming. I discovered it very recently, so I want to start simple and learn the basics of this language. In this post, we will write our first Go program and library. Also, we will learn how to unit tests our Go programs.
 <!--more-->
 
 # Installing Go
 
-I will show you how to install Go in Linux. For Windows and Mac the process should be very similar. First, you need to visit [this page](https://golang.org/dl/) and copy the link for the Linux version. In my case, I will go for the `go1.9.linux-amd64` version. We need to extract the file somewhere in our computer.
+I will show you how to install Go in Linux. For Windows and Mac, the process should be very similar. First, you need to visit [this page](https://golang.org/dl/) and copy the link for the Linux version. In my case, I need the `go1.9.linux-amd64` version. We need to extract the file somewhere in our computer.
 
-
-
-{{<codeblock lang="bash">}} 
-# cd /opt
-# curl https://storage.googleapis.com/golang/go1.9.linux-amd64.tar.gz | tar zxf -
+{{<codeblock lang="bash">}}
+cd /opt
+curl https://storage.googleapis.com/golang/go1.9.linux-amd64.tar.gz | tar zxf -
 {{</codeblock>}}
 
 
 
-Now, we need to create our Go home directory. In that folder we will keep our source files, install external libraries and save  the executables for our programs. Go ahead and create this folder in your home directory:
+Now, we need to create our Go home directory. In that folder, we will keep our source files, third-party libraries, and install the executables for our programs. Go ahead and create this folder in your home directory:
 
 {{<codeblock lang="bash">}}
 go/
@@ -27,25 +27,32 @@ go/
 └── src
 {{</codeblock>}}
 
+Finally, we need to set two environment variables: `GOROOT` and `GOPATH`. Go binaries will assume they have been installed in `/usr/local/go` (or `c:\Go` in Windows). In case you installed them somewhere else, set `GOROOT` to your Go binaries folder.
 
-
-Finally, add this variables to your `~/.bashrc` file:
-
-{{<codeblock lang="bash">}}
+{{<codeblock "~/.bashrc" "bash">}}
 # Point to the local installation of golang.
 export GOROOT=/opt/go
+{{</codeblock>}}
 
+The `GOPATH` variable, as discussed [here](https://golang.org/cmd/go/#hdr-GOPATH_environment_variable):
+
+> [...] lists places to look for Go code. On Unix, the value is a colon-separated string. On Windows, the value is a semicolon-separated string.
+
+{{<codeblock "~/.bashrc" "bash">}}
 # Point to the location beneath which source and binaries are installed.
 export GOPATH=$HOME/go
+{{</codeblock>}}
 
+Finally, let's add Go binaries and our /bin folders to the $PATH variable. This way, we can use the Go tools and our programs from the console.
+{{<codeblock "~/.bashrc" "bash">}}
 # Ensure that the binary-release is on your PATH.
 export PATH=${PATH}:${GOROOT}/bin
 
 # Ensure that compiled binaries are also on your PATH.
-export PATH=${PATH}:${GOPATH}/bin
+export PATH=${PATH}:$HOME/go/bin
 {{</codeblock>}}
 
-Check that Go is correctly installed:
+Save the `~/.bashrc` file, and check that Go is correctly installed:
 
 {{<codeblock lang="bash">}}
 $ source .bashrc
@@ -53,9 +60,9 @@ $ go version
 go version go1.9 linux/amd64
 {{</codeblock>}}
 
-# Writing our first Hello World!
+# Writing our first "Hello World!" program
 
-We will create our first Go program. For this, we need to create a `hello_world` folder inside `go/src`. Go files end with the `.go` extension. Let's add a `main.go` file with this code:
+Let's create our first Go program. For this, we need to create a `hello_world` folder inside `$HOME/go/src`. Go files end with the `.go` extension. Let's add a `main.go` file with this code:
 
 {{<codeblock "main.go" "go">}}
 package main
@@ -71,21 +78,16 @@ func main() {
 
 The first statement in any Go source file will be the package name. Packages are a way to separate files in your projects. For executable projects, there should always be a `main` package.
 
+The `import` keyword allow us to import packages in our source file. The `fmt` package is part of the Go's standard library. We will use "fmt" to print to `stdout`. Later in this post, we will see how to import our own libraries.
 
-The `import` keyword allow us to import packages in our source file. The `fmt` package is a part of the Go's standard library and we will use it to print to `stdout`. Later in this post we will see how to import our own libraries.
-
-
-
-Finally, we need to define the `main` function. This will be the starting point of our program and is always required in executable projects.
-
-
+Finally, we need to define the `main` function. This will be the starting point of our program and it is always required in executable projects.
 
 # Building and installing our program
 
-To simple compile and run our program we can use the `run` command.
+To simple compile and run our program, we can use the `run` command.
 
 {{<codeblock lang="bash">}}
-$ cd go/src/hello_world
+$ cd $HOME/go/src/hello_world
 $ go run main.go
 Hello world!
 {{</codeblock>}}
@@ -93,7 +95,7 @@ Hello world!
 This will not create an executable file. However, the `build` command will do it:
 
 {{<codeblock lang="bash">}}
-$ cd go/src/hello_world
+$ cd $HOME/go/src/hello_world
 $ go build .
 $ ./hello_world
 Hello world!
@@ -102,7 +104,7 @@ Hello world!
 Additionally, the `install` command will build and copy the executable in the `go/bin` folder. We added this folder to our `$PATH`, so the executable will get installed in our computer.
 
 {{<codeblock lang="bash">}}
-$ cd go/src/hello_world
+$ cd $HOME/go/src/hello_world
 $ go install .
 $ ./hello_world
 Hello world!
@@ -123,9 +125,7 @@ go
 
 # Writing our own library
 
-A library in Go is a project that does not define a `main` package and will not build an executable file. Let's create a `strcaseconv` folder in `go/src`. We will use this library in our `hello_world` folder. Inside the `strcaseconv` we will a `strcase.go` file with this code:
-
-
+A library in Go is a project that does not define a `main` package and will not bild an executable file. For our first library, let's create a `strcaseconv` folder in `$HOME/go/src`. We will use this library in our `hello_world` folder. Inside `strcaseconv`, we will add a `strcase.go` file with this code:
 
 {{<codeblock "strcase.go" "go">}}
 package strcaseconv
@@ -145,16 +145,15 @@ func ToMixCase(s string) string {
 
 
 
-Compile the library to see if compilation was successful:
+Compile the library to check for any errors:
 
 {{<codeblock lang="bash">}}
-$ cd go/src/strcaseconv
-
+$ cd $HOME/go/src/strcaseconv
 $ go build .
 {{</codeblock>}}
 
 
-Now, go back to `hello_world/main.go` and modify it:
+Now, go back to your `hello_world` projectd and modify `main.go` to use our new library:
 
 {{<codeblock "main.go" "go">}}
 package main
@@ -174,13 +173,13 @@ func main() {
 
 # Unit testing our projects
 
-In Go, the unit test framework comes for free. This framework consists in the `test` command and the `testing` package. All test should be written in files ending with `_test.go`. The unit test function should be named following the `TestXXX` convention. The functions' signature ought to be `func (t *testing.T)`.
+In Go, the unit test framework comes for free. This framework consists in the `test` command and the `testing` package. All test should be written in files ending with `_test.go`. The unit test functions should be named following the `TestXXX` convention. The functions' signature ought to be `func (t *testing.T)`.
 
 
 
-The test command will run all functions, those function who calls `t.Error` or `t.Fail` are considered as failed tests. Let's unit test our `strcaseconv` library creating file `strcase_test.go`:
+The `test` command will run all unit test functions. Those function who calls `t.Error` or `t.Fail` are considered as failed tests. Let's unit test our `strcaseconv` library in `strcase_test.go`:
 
-{{<codeblock "strcase_test" "go">}}
+{{<codeblock "strcase_test.go" "go">}}
 package strcaseconv
 
 import "testing"
@@ -237,7 +236,6 @@ func TestToMixCase(t *testing.T) {
 }
 {{</codeblock>}}
 
-
 To run them, use the `test` command:
 
 {{<codeblock lang="bash">}}
@@ -247,11 +245,7 @@ PASS
 ok      strcaseconv    0.001s
 {{</codeblock>}}
 
-
-
 You can find more information about the `testing` package [here](https://godoc.org/testing)
-
-
 
 # More useful commands
 
@@ -265,23 +259,15 @@ What is your name?: Emmanuel
 Hello Emmanuel!
 {{</codeblock>}}
 
+Go will install new libraries in the first folder pointed by `GOPATH`. In our setup, it will be in the `$HOME/go/src` folder.
 
-
-Go will install the packages in the `go/src` folder. You can import them as any other project in your home folder.
-
-
-
-Another nice feature is the `fmt` command. This command will take as parameters Go source files and will format them using Go conventions.
-
-
+Another useful feature is the `fmt` command. This command will take as parameters Go source files and it will format them using Go conventions.
 
 If you are a Vim user, there is a nice [plugin](https://github.com/fatih/vim-go) for Go development.
 
 # Where to go next?
 
 There are a lot of resources and documentation about Go. If you want to learn more about Go visit these websites:
-
-
 
 + [Go Playground](https://play.golang.org/) Online Go editor and compiler
 + [A Tour of Go](https://tour.golang.org/welcome/1) Official Go tutorial
