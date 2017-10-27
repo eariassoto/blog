@@ -8,7 +8,7 @@ categories: ["Development", "Tutorials"]
 Starting a C/C++ project can be as easy or as difficult as you want. Personally, I don't like to fire up an IDE just for a small program. So, I end up using a text editor and compiling by terminal. However, the compilation process can get tedious. In this post, we will build a simple project template for a C/C++ program. This project will use the CMake tool to handle all the compilation process.
 <!--more-->
 
-<a class=button href="https://github.com/eariassoto/cpp-project-template" target="%5fblank">Get the code on GitHub</a>
+<a class=button href="https://github.com/eariassoto/cpp-project-template/tree/basic-template" target="%5fblank">Get the code on GitHub</a>
 
 # Requirements
 ## C/C++ Code Compiler
@@ -217,4 +217,4 @@ Vector 1 dot product Vector 2: 40
 
 That's pretty much it. Now go and write your own programs without much hassle.
 
-<a class=button href="https://github.com/eariassoto/cpp-project-template" target="%5fblank">Get the code on GitHub</a>
+<a class=button href="https://github.com/eariassoto/cpp-project-template/tree/basic-template" target="%5fblank">Get the code on GitHub</a>
