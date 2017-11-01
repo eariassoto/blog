@@ -6,6 +6,8 @@ draft: false
 [In a previous post](https://eariassoto.github.io/2017/04/building-a-basic-c/c---project-template/), I showed you a C/C++ template that you can use for a project. I felt that it needed a basic testing framework. Therefore, we are going to learn how to install and use the Google Test framework to write tests. When we have finished this tutorial, we will have an executable that will run tests for our code.
 <!--more-->
 
+<a class=button href="https://github.com/eariassoto/cpp-project-template/tree/template-with-ut" target="%5fblank">Get the code on GitHub</a>
+
 I will assume that you are familiarized with unit testing methods. In case you do not know about the Google Test framework, [here](https://github.com/google/googletest/blob/master/googletest/docs/Primer.md) is a basic introduction to this library. This post will be more of a tutorial rather than a technical post. I plan to write about test driven development (TDD) in the future.
 
 ## Requirements
@@ -306,3 +308,5 @@ The documentation for Google Test is quite extensive. Here is a list of resource
 
 + [Google Test documentation](https://github.com/google/googletest/blob/master/googletest/docs/Documentation.md)
 + [Google Mock documentation](https://github.com/google/googletest/tree/master/googlemock/docs)
+
+<a class=button href="https://github.com/eariassoto/cpp-project-template/tree/template-with-ut" target="%5fblank">Get the code on GitHub</a>
