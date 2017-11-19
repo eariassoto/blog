@@ -2,6 +2,8 @@
 title: "Analyze the testing coverage of your C++ code"
 date: 2017-11-18T15:57:42Z
 draft: false
+tags: [ "C++", "cmake", "templates", "coverage"]
+categories: ["Development", "Tutorials"]
 ---
 Writing unit tests is a great way to ensure that your code is behaving correctly. But how can you tell how much of your code are you testing? The GCC compiler provides tools to analyze the testing coverage of your project. In this post, I will show you how to integrate these tools in a CMake project.
 <!--more-->
