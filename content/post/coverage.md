@@ -12,16 +12,16 @@ Writing unit tests is a great way to ensure that your code is behaving correctly
 
 GCC provides a testing coverage tool called `gcov`. It creates log files that register how many times a code line has been executed. Using `gcov` out of the box is as easy as compiling your code with some special flags:
 
-{{<codeblock lang="bash">}}
+```bash
 gcc -Wall -fprofile-arcs -ftest-coverage -O0 main.c
-{{</codeblock>}}
+```
 
 Then, you run all the tests for that code, and call `gcov`. This is an example output:
-{{<codeblock lang="bash">}}
+```bash
 $ gcov main.c 
  88.89% of 9 source lines executed in file main.c
 Creating main.c.gcov
-{{</codeblock>}}
+```
 
 The generated `.gcov` files are copies of our source files, but with counters for every line that was executed. Though these `.gcov` files give you the information you need, it would be great if we could generate more detailed reports. We can actually do this using `lcov`, a tool that creates HTML reports based on `gcov`'s output.
 
@@ -34,19 +34,19 @@ Configuring `gcov` and `lcov` for CMake can be quite complicated. To make things
 ## Setting out our CMake
 First, we need to declare the name of our testing executable in `CMakeLists.txt`. This is the executable that our coverage tool will run for the testing coverage analysis.
 
-{{<codeblock "CMakeLists.txt" "cmake">}}
+```cmake
 set (PROJECT_TEST_NAME ${PROJECT_NAME}-ut)
-{{</codeblock>}}
+```
 
 Next, we need to set our CMake module folder to `CMakeModules`:
 
-{{<codeblock "CMakeLists.txt" "cmake">}}
+```cmake
 # Folder where the Coverage module is
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/CMakeModules)
-{{</codeblock>}}
+```
 
 Finally, we need to configure the coverage target:
-{{<codeblock "CMakeLists.txt" "cmake">}}
+```cmake
 # Code coverage
 if (CMAKE_BUILD_TYPE STREQUAL "Coverage")
     set_target_properties(${PROJECT_NAME}
@@ -68,20 +68,20 @@ if (CMAKE_BUILD_TYPE STREQUAL "Coverage")
 	DEPENDENCIES ${PROJECT_NAME}
     )
 endif() #CMAKE_BUILD_TYPE STREQUAL "Coverage"
-{{</codeblock>}}
+```
 
 First thing we need to do here is add the compiler flags to enable `gcov`. We also need to add the flag to disable optimizations. The `include` command will add the CMake module we downloaded to our project. Then, we need to declare all the folders we want to exclude from the analysis. Finally, the `SETUP_TARGET_FOR_COVERAGE` command makes all the magic happen. We will have a `coverage` target that will run the executable we declared, and create the coverage report in our `build` folder.
 
 ## Running the test coverage analysis
 To run the analysis, we need to build the project using the `Coverage` build type:
 
-{{<codeblock lang="bash">}}
+```bash
 mkdir build
 cd build
 cmake -DCMAKE_BUILD_TYPE=Coverage ..
 make
 make coverage
-{{</codeblock>}}
+```
 
 If these commands executed succesfully, open `build/coverage/index.html` file in a web browser. It will look like this:
  
@@ -89,7 +89,7 @@ If these commands executed succesfully, open `build/coverage/index.html` file in
 
 Now you have all your coverage information in one report! You can navigate through your code and check which parts need testing. Let's modify our sample program a little bit, and add some validations to our `Person` constructor. We will change it to throw an exception if the name comes empty:
 
-{{<codeblock "src/person.cpp" "c++">}}
+```c++
 #include <stdexcept>
 #include "Person.h"
 
@@ -99,7 +99,7 @@ Person::Person(std::string name) {
 	}
 	this->name = name;
 };
-{{</codeblock>}}
+```
 
 Let's run the analysis again with `make coverage`:
 
@@ -107,7 +107,7 @@ Let's run the analysis again with `make coverage`:
 
 We can see that line 6 is not being executed by any unit test. Let's add two unit test to be sure we are covering both branches of the constructor:
 
-{{<codeblock "tests/src/personTests.cpp" "c++">}}
+```c++
 TEST(GreeterTests, PersonValidCtorTest) {
 	ASSERT_NO_THROW({
 		Person p{"Alexa"};
@@ -119,7 +119,7 @@ TEST(GreeterTests, PersonInvalidCtorTest) {
 		Person p{""};
 	}, std::invalid_argument);
 }
-{{</codeblock>}}
+```
 
 A final run of the analysis will tell us that our code is 100% covered again:
 

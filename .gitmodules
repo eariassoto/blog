@@ -1,6 +1,6 @@
-[submodule "themes/hugo-tranquilpeak-theme"]
-	path = themes/hugo-tranquilpeak-theme
-	url = https://github.com/kakawait/hugo-tranquilpeak-theme.git
 [submodule "public"]
 	path = public
 	url = https://github.com/eariassoto/eariassoto.github.io
+[submodule ".\\themes\\hugo-notepadium"]
+	path = .\\themes\\hugo-notepadium
+	url = https://github.com/cntrump/hugo-notepadium

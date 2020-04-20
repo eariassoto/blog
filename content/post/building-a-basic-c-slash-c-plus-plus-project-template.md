@@ -13,80 +13,93 @@ Starting a C/C++ project can be as easy or as difficult as you want. Personally,
 # Requirements
 ## C/C++ Code Compiler
 The first thing we need is a C/C++ compiler. Most Linux distribution will have [GCC](https://gcc.gnu.org/) installed by default. To check if you have GCC install run:
-{{<codeblock lang="bash">}}
+
+```bash
 $ gcc --version
 gcc (Ubuntu 6.3.0-12ubuntu2) 6.3.0 20170406
 Copyright (C) 2016 Free Software Foundation, Inc.
 This is free software; see the source for copying conditions. There is NO
 warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-{{< /codeblock >}}
+```
+
 If you don't get a similar message you need to install GCC. For Debian based distributions (Ubuntu, Linux Mint) you can install the **build-essential** package:
-{{<codeblock lang="bash">}}
+
+```bash
 $ sudo apt-get update
 $ sudo apt-get install build-essential
-{{< /codeblock >}}
+```
+
 **build-essential** package includes GCC and other required packages. In case you are using Windows, you can install [MinGW](http://www.mingw.org/) to install and setup GCC.
 
 ## CMake
 CMake is an open-source cross-platform project that provides a set of tools to build, test and install software. It uses configuration files to control the configuration process. The installation process should be easy, and for Debian bases distributions, you just need to run the command:
-{{<codeblock lang="bash">}}
+
+```bash
 $ sudo apt-get install cmake
-{{< /codeblock >}}
+```
+
 For other Linux distributions or other OS check out [CMake official page](https://cmake.org/).
 
 # Project structure
 
 This is how our project folder will look:
-{{<codeblock lang="bash">}}
+
+```bash
 cpp-project-template/
 ├── CMakeLists.txt
 ├── include
 ├── src
 │   └── main.cpp
-{{< /codeblock >}}
+```
+
 `CMakeLists.txt` is the configuration file for CMake. We will put our header files on `/include` and our source files on `/src`.
 
 # CMake configuration file
 Let's see the first configuration file in more details:
-{{<codeblock "CMakeLists.txt" "cmake">}}
+```cmake
 cmake_minimum_required (VERSION 2.8)
 
 set (PROY cpp-project-template)
 project (${PROY} C CXX)
-{{< /codeblock >}}
+```
 First, we need to set the minimum CMake version, in our case version 2.8. Then, we need to define a name for our project. Change the project name for one of your preference, the executable will be name after this.
-{{<codeblock "CMakeLists.txt" "cmake">}}
+
+```cmake
 # Source files folder
 set (SRC_DIR src)
 
 # Header files folder
 set (INCL_DIR include)
-{{< /codeblock >}}
+```
+
 Here we set the folders that contain our code. If you are going to create additional folders, make sure to create proper variables for those folders too. We will need these variables to include our files.
-{{<codeblock "CMakeLists.txt" "cmake">}}
+
+```cmake
 # Compilation flags
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -Werror")
-{{< /codeblock >}}
+```
+
 We can set our compilation flags in the `CMAKE_CXX_FLAGS` variable. For our project we will be using C++11 version. The `-Wall` flag enables all warning, and the `-Werror` flag treat warnings as errors.
 
-{{<codeblock "CMakeLists.txt" "cmake">}}
+```cmake
 include_directories (${PROJECT_SOURCE_DIR}/${INCL_DIR})
 
 # Important: Include all source files on this list
 set (SOURCE
 ${SRC_DIR}/main.cpp
 )
-{{< /codeblock >}}
+```
+
 `include_directories` command will include our headers to the build. Also, we need to fill in `SOURCE` variable with all of our source files. Otherwise, CMake will not compile our source files.
 
-{{<codeblock "CMakeLists.txt" "cmake">}}
+```cmake
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_SOURCE_DIR}/bin")
 
 add_executable (${PROY} ${SOURCE})
 
 # Unit tests
 add_subdirectory(tests)
-{{< /codeblock >}}
+```
 
 `CMAKE_RUNTIME_OUTPUT_DIRECTORY` specifies where CMake will save our output files. In our case, executables will be on `/bin` folder. Finally, the `add_executable` command will create a executable file with our source files.
 
@@ -94,7 +107,7 @@ add_subdirectory(tests)
 
 Let's define a `Vector` class. For simplicity, we are going to represent 2D vectors. Also, our class will implement some basic operations between vectors.
 
-{{<codeblock "include/Vector.h" "c++">}}
+```C++
 #ifndef __VECTOR_H__
 #define __VECTOR_H__
 
@@ -125,9 +138,9 @@ private:
 };
 
 #endif /* __VECTOR_H__ */
-{{< /codeblock >}}
+```
 
-{{<codeblock "src/Vector.cpp" "c++">}}
+```C++
 #include "Vector.h"
 
 Vector Vector::sum(const Vector &vec) {
@@ -141,11 +154,11 @@ Vector Vector::scale(const double k) { return Vector{k * a1, k * a2}; }
 double Vector::dot(const Vector &vec) {
   return a1 * vec.getA1() + a2 * vec.getA2();
 }
-{{< /codeblock >}}
+```
 
 Let's create a couple of vectors and output the results on our main function:
 
-{{<codeblock "src/main.cpp" "c++">}}
+```C++
 // System includes
 #include <iostream>
 
@@ -165,10 +178,11 @@ int main(int argc, char *argv[]) {
             << '\n';
   return 0;
 }
-{{< /codeblock >}}
+```
 
 Finally, we have to change the project name and include our new source files. Here are the `CMakeLists.txt` file with the necessary changes:
-{{<codeblock "CMakeLists.txt" "cmake">}}
+
+```cmake
 cmake_minimum_required (VERSION 2.8)
 
 set (PROY math-vector-example)
@@ -194,18 +208,20 @@ ${SRC_DIR}/Vector.cpp
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_SOURCE_DIR}/bin")
 
 add_executable (${PROY} ${SOURCE})
-{{< /codeblock >}}
+```
 
 To compile our program, we will need to run these commands:
-{{<codeblock lang="bash">}}
+
+```bash
 $ mkdir build
 $ cd build
 $ cmake ..
 $ make
-{{< /codeblock >}}
+```
+
 You only need to create the `build/` folder once. The `cmake ..` command will generate the makefiles and `make` will build the program. If everything went all right, the executable will be saved in the `bin/` folder. Let's run our example:
 
-{{<codeblock lang="bash">}}
+```bash
 $ ./../bin/math-vector-example
 Vector 1: (3, 2)
 Vector 2: (10, 5)
@@ -213,7 +229,7 @@ Vector 1 + Vector 2: (13, 7)
 Vector 1 - Vector 2: (-7, -3)
 0.3 * Vector 2: (0.9, 0.6)
 Vector 1 dot product Vector 2: 40
-{{< /codeblock >}}
+```
 
 That's pretty much it. Now go and write your own programs without much hassle.
 

@@ -3,7 +3,7 @@ title: "First Steps With Go"
 date: 2017-09-10T18:03:18-06:00
 draft: false
 tags: ["go"]
-categories: ["tutorials", "development"]
+categories: ["Tutorials", "Development"]
 ---
 Go is a simple and powerful programming language. Its syntax is familiar to C/C++ but it definately has improvements in comparison. It has a bunch of great features such as static types, memory safety, garbage collection, and it is targeted to concurrent programming. I discovered it very recently, so I want to start simple and learn the basics of this language. In this post, we will write our first Go program and library. Also, we will learn how to unit tests our Go programs.
 <!--more-->
@@ -12,59 +12,60 @@ Go is a simple and powerful programming language. Its syntax is familiar to C/C+
 
 I will show you how to install Go in Linux. For Windows and Mac, the process should be very similar. First, you need to visit [this page](https://golang.org/dl/) and copy the link for the Linux version. In my case, I need the `go1.9.linux-amd64` version. We need to extract the file somewhere in our computer.
 
-{{<codeblock lang="bash">}}
+```bash
 cd /opt
 curl https://storage.googleapis.com/golang/go1.9.linux-amd64.tar.gz | tar zxf -
-{{</codeblock>}}
+```
 
 
 
 Now, we need to create our Go home directory. In that folder, we will keep our source files, third-party libraries, and install the executables for our programs. Go ahead and create this folder in your home directory:
 
-{{<codeblock lang="bash">}}
+```bash
 go/
 ├── bin
 └── src
-{{</codeblock>}}
+```
 
 Finally, we need to set two environment variables: `GOROOT` and `GOPATH`. Go binaries will assume they have been installed in `/usr/local/go` (or `c:\Go` in Windows). In case you installed them somewhere else, set `GOROOT` to your Go binaries folder.
 
-{{<codeblock "~/.bashrc" "bash">}}
+```bash
 # Point to the local installation of golang.
 export GOROOT=/opt/go
-{{</codeblock>}}
+```
 
 The `GOPATH` variable, as discussed [here](https://golang.org/cmd/go/#hdr-GOPATH_environment_variable):
 
 > [...] lists places to look for Go code. On Unix, the value is a colon-separated string. On Windows, the value is a semicolon-separated string.
 
-{{<codeblock "~/.bashrc" "bash">}}
+```bash
 # Point to the location beneath which source and binaries are installed.
 export GOPATH=$HOME/go
-{{</codeblock>}}
+```
 
 Finally, let's add Go binaries and our /bin folders to the $PATH variable. This way, we can use the Go tools and our programs from the console.
-{{<codeblock "~/.bashrc" "bash">}}
+
+```bash
 # Ensure that the binary-release is on your PATH.
 export PATH=${PATH}:${GOROOT}/bin
 
 # Ensure that compiled binaries are also on your PATH.
 export PATH=${PATH}:$HOME/go/bin
-{{</codeblock>}}
+```
 
 Save the `~/.bashrc` file, and check that Go is correctly installed:
 
-{{<codeblock lang="bash">}}
+```bash
 $ source .bashrc
 $ go version
 go version go1.9 linux/amd64
-{{</codeblock>}}
+```
 
 # Writing our first "Hello World!" program
 
 Let's create our first Go program. For this, we need to create a `hello_world` folder inside `$HOME/go/src`. Go files end with the `.go` extension. Let's add a `main.go` file with this code:
 
-{{<codeblock "main.go" "go">}}
+```go
 package main
 
 import (
@@ -74,7 +75,7 @@ import (
 func main() {
     fmt.Println("hello world!")
 }
-{{</codeblock>}}
+```
 
 The first statement in any Go source file will be the package name. Packages are a way to separate files in your projects. For executable projects, there should always be a `main` package.
 
@@ -86,33 +87,33 @@ Finally, we need to define the `main` function. This will be the starting point 
 
 To simple compile and run our program, we can use the `run` command.
 
-{{<codeblock lang="bash">}}
+```bash
 $ cd $HOME/go/src/hello_world
 $ go run main.go
 Hello world!
-{{</codeblock>}}
+```
 
 This will not create an executable file. However, the `build` command will do it:
 
-{{<codeblock lang="bash">}}
+```bash
 $ cd $HOME/go/src/hello_world
 $ go build .
 $ ./hello_world
 Hello world!
-{{</codeblock>}}
+```
 
 Additionally, the `install` command will build and copy the executable in the `go/bin` folder. We added this folder to our `$PATH`, so the executable will get installed in our computer.
 
-{{<codeblock lang="bash">}}
+```bash
 $ cd $HOME/go/src/hello_world
 $ go install .
 $ ./hello_world
 Hello world!
-{{</codeblock>}}
+```
 
 So far, this is how your Go home folder should look like:
 
-{{<codeblock lang="bash">}}
+```bash
 go
 ├── bin
 │   └── hello_world
@@ -120,14 +121,14 @@ go
     └── hello_world
         ├── hello_world
         └── main.go
-{{</codeblock>}}
+```
 
 
 # Writing our own library
 
 A library in Go is a project that does not define a `main` package and will not bild an executable file. For our first library, let's create a `strcaseconv` folder in `$HOME/go/src`. We will use this library in our `hello_world` folder. Inside `strcaseconv`, we will add a `strcase.go` file with this code:
 
-{{<codeblock "strcase.go" "go">}}
+```go
 package strcaseconv
 
 func ToMixCase(s string) string {
@@ -141,21 +142,20 @@ func ToMixCase(s string) string {
         }
         return string(b)
 }
-{{</codeblock>}}
+```
 
 
 
 Compile the library to check for any errors:
 
-{{<codeblock lang="bash">}}
+```bash
 $ cd $HOME/go/src/strcaseconv
 $ go build .
-{{</codeblock>}}
-
+```
 
 Now, go back to your `hello_world` projectd and modify `main.go` to use our new library:
 
-{{<codeblock "main.go" "go">}}
+```go
 package main
 
 import (
@@ -167,9 +167,7 @@ import (
 func main() {
     fmt.Println(strcaseconv.ToMixCase("hello world!"))
 }
-{{</codeblock>}}
-
-
+```
 
 # Unit testing our projects
 
@@ -179,7 +177,7 @@ In Go, the unit test framework comes for free. This framework consists in the `t
 
 The `test` command will run all unit test functions. Those function who calls `t.Error` or `t.Fail` are considered as failed tests. Let's unit test our `strcaseconv` library in `strcase_test.go`:
 
-{{<codeblock "strcase_test.go" "go">}}
+```go
 package strcaseconv
 
 import "testing"
@@ -234,16 +232,16 @@ func TestToMixCase(t *testing.T) {
         }
     }
 }
-{{</codeblock>}}
+```
 
 To run them, use the `test` command:
 
-{{<codeblock lang="bash">}}
+```bash
 $ cd go/src/strcaseconv
 $ go test
 PASS
 ok      strcaseconv    0.001s
-{{</codeblock>}}
+```
 
 You can find more information about the `testing` package [here](https://godoc.org/testing)
 
@@ -251,13 +249,13 @@ You can find more information about the `testing` package [here](https://godoc.o
 
 To install someone else's library or program, Go offers the `get` command. To try it, let's download this hello world program I made a little while ago:
 
-{{<codeblock lang="bash">}}
+```bash
 $ go get github.com/eariassoto/hello_go
 $ cd go/src/github.com/eariassoto/hello_go/
 $ go run main.go 
 What is your name?: Emmanuel
 Hello Emmanuel!
-{{</codeblock>}}
+```
 
 Go will install new libraries in the first folder pointed by `GOPATH`. In our setup, it will be in the `$HOME/go/src` folder.
 

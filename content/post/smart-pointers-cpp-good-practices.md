@@ -10,7 +10,7 @@ Ever since the C++ language was first standardized, `new` and `delete` were defi
 
 Let's create a small example that created objects dynamically with `new` and `delete`:
 
-{{<codeblock lang="c++">}}
+```c++
 #include <iostream>
 #include <string>
 #include <sstream>
@@ -40,15 +40,15 @@ int main() {
   delete contact;
   return 0;
 }
-{{< /codeblock >}}
+```
 
 If we run this program we will get:
 
-{{<codeblock lang="bash">}}
+```bash
 Constructed: [0x162bc80]
 Contact: {Name:John Doe, Email:jdoe@mail.com}
 Destructing: [0x162bc80]
-{{< /codeblock >}}
+```
 
 Using regular pointers, like this example can give you problems. If you miss a `delete` call on an object, the object's memory blocks will not be reassigned to another process. This problem is called memory leak. Leaking memory can exhaust all of the system's memory!
 
@@ -60,7 +60,7 @@ Both ownership and memory deallocation are addressed by the new pointer types, i
 
 Let's change our main function so it uses `unique_ptr` instead:
 
-{{<codeblock lang="c++">}}
+```c++
 #include <memory>
 
 int main() {
@@ -71,20 +71,20 @@ int main() {
   std::cout << "Bar\n";
   return 0;
 }
-{{< /codeblock >}}
+```
 
 
-{{<codeblock lang="bash">}}
+```bash
 Foo
 Constructed: [0x1e68c80]
 Contact: {Name:John Doe, Email:jdoe@mail.com}
 Bar
 Destructing: [0x1e68c80]
-{{< /codeblock >}}
+```
 
 I added two logs so you can verify that `contact` deletes the object after "Bar" is logged. This happens because `contact` is owned by `main`, and `main` goes out of scope after this log. Let's surround `contact` with an anonymous scope:
 
-{{<codeblock lang="c++">}}
+```c++
 int main() {
   std::cout << "Foo\n";
   {
@@ -95,28 +95,28 @@ int main() {
   std::cout << "Bar\n";
   return 0;
 }
-{{< /codeblock >}}
+```
 
 
-{{<codeblock lang="bash">}}
+```bash
 Foo
 Constructed: [0x1e68c80]
 Contact: {Name:John Doe, Email:jdoe@mail.com}
 Destructing: [0x1e68c80]
 Bar
-{{< /codeblock >}}
+```
 
 Now the object is deleted when the anonymous scope goes out of scope, right before the "Bar" log. Notice that in both examples, there is no `delete` call. We can even get rid of the `new` operator with C++14's `make_unique` function:
 
-{{<codeblock lang="c++">}}
+```c++
   std::unique_ptr<Contact> contact =
       std::make_unique<Contact>("John Doe", "jdoe@mail.com");
 }
-{{< /codeblock >}}
+```
 
 There are cases where we need to share the ownership of an object. For this, C++11 introduced the `shared_ptr` type. Several `shared_ptr`s can refer to the same object, thus sharing ownership. Internally, these pointers keep a use counter. This counter indicates how many `shared_ptr` are sharing ownership of an object. The last `shared_ptr` owning an object deletes the object once it goes out of scope. This pointer type allows you to distribute ownership with the safety that memory will be properly freed. Let's add to our example a `compare` function that receives a copy `shared_ptr` as a parameter. I added logs so we can check the pointers' use counter:
 
-{{<codeblock lang="c++">}}
+```c++
 class Contact {
  public:
   Contact(const std::string& name, const std::string& email)
@@ -160,9 +160,9 @@ int main() {
   std::cout << "Bar\n";
   return 0;
 }
-{{< /codeblock >}}
+```
 
-{{<codeblock lang="bash">}}
+```bash
 Constructed: [0x1bf4c30]
 Constructed: [0x1bf4cc0]                                             
 ContactJane pointer: 0x1bf4cc0 use count: 1
@@ -172,7 +172,7 @@ ContactJane pointer: 0x1bf4cc0 use count: 1
 Bar
 Destructing: [0x1bf4cc0]
 Destructing: [0x1bf4c30]
-{{< /codeblock >}}
+```
 
 Notice how calling `compare` increases the use counter for `contactJane` to two. Then, `compare` returns and the use counter goes back to one. When `main` finishes, the counter goes to zero, and memory is properly deleted. We do not have to worry about whether `compare` will invalidate our memory or not. Another problem solved by the smart pointers!
 
