@@ -63,10 +63,6 @@ darkTheme = "xcode-dark"
 showCategories = true       # /categories/
 showTags = true             # /tags/
 
-[[params.nav.custom]]
-title = "About"
-url = "/about/"
-
-[[params.nav.custom]]
-title = "Hugo"
-url = "https://gohugo.io/"
+#[[params.nav.custom]]
+#title = "About"
+#url = "/about/"
