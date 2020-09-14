@@ -10,7 +10,7 @@ tags:
 keywords:
 - tech
 #thumbnailImage: //example.com/image.jpg
-draft: true
+draft: false
 ---
 
 This implementation was inspired by Stackoverflow user  [Yakk - Adam Nevraumont](https://stackoverflow.com/users/1774667/yakk-adam-nevraumont)'s answer for a [question about `std::condition_variable`](https://stackoverflow.com/questions/57219650/stdcondition-variablenotify-all-only-wakes-up-one-thread-in-my-threadpool). I extended it to make it a working example, and I plan to use it as a base for a new project I have in mind.
