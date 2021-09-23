@@ -1,5 +1,5 @@
 ---
-title: "Memory allocatos in C++ - Part 1"
+title: "Memory allocators in C++ - Part 1"
 date: 2020-09-09T23:28:52+02:00
 draft: false
 tags: [ "C++"]
