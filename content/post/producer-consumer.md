@@ -2,13 +2,10 @@
 title: "Minimal implementations in Modern C++: Producer-Consumer problem"
 date: 2020-04-20T14:51:44+02:00
 categories:
-- category
-- subcategory
+- Development
 tags:
-- tag1
-- tag2
-keywords:
-- tech
+- C++
+- Design patterns
 #thumbnailImage: //example.com/image.jpg
 draft: false
 ---
