@@ -1,6 +1,6 @@
 [submodule "public"]
 	path = public
-	url = https://github.com/eariassoto/eariassoto.github.io
+	url = git@github.com:eariassoto/eariassoto.github.io.git
 [submodule "themes/hugo-notepadium"]
 	path = themes/hugo-notepadium
 	url = https://github.com/cntrump/hugo-notepadium

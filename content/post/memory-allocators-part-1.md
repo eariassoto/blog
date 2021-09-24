@@ -7,6 +7,8 @@ categories: ["Development", "Game development"]
 ---
 When you want to instantiate a class or a struct in the dynamic memory space, we normally use the `new` and `delete` operators.
 
+<!--more-->
+
 ```c++
 class Point {
 	float m_X;
