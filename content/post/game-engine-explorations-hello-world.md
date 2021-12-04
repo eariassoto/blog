@@ -5,8 +5,7 @@ draft: false
 ---
 
 My previous post was an introduction to my first explotations in game engine development. In this post, I am laying down the foundation of the project. I will be using a tool that automatically creates Visual Studio solutions and Makefiles.
-
-<!-- more -->
+<!--more-->
 
 This first iteration consists of an executable program that calls a function from a static library. This is how the folder structure looks like without any configuration files:
 
