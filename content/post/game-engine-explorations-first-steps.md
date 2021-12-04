@@ -64,7 +64,7 @@ This is a list of books and resources I am using to start the project:
 
 ## So what is left?
 
-Now comes the fun part, code! In the next post, I will be setting up the build system and the project configuration. I promise to end up with a classic Hello World! :)
+Now comes the fun part, code! In the [next post](https://eariassoto.github.io/post/game-engine-explorations-hello-world/), I will be setting up the build system and the project configuration. I promise to end up with a classic Hello World! :)
 
 
 
