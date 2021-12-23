@@ -3,7 +3,7 @@ title: "First Steps With Go"
 date: 2017-09-10T18:03:18-06:00
 draft: false
 tags: ["go"]
-categories: ["Tutorials", "Development"]
+categories: ["Small Projects"]
 ---
 Go is a simple and powerful programming language. Its syntax is familiar to C/C++ but it definately has improvements in comparison. It has a bunch of great features such as static types, memory safety, garbage collection, and it is targeted to concurrent programming. I discovered it very recently, so I want to start simple and learn the basics of this language. In this post, we will write our first Go program and library. Also, we will learn how to unit tests our Go programs.
 <!--more-->

@@ -2,6 +2,8 @@
 title: "Game Engine Explorations: Hello World"
 date: 2021-12-04T03:41:43+01:00
 draft: false
+tags: [ "C++"]
+categories: ["Game Engine Explorations"]
 ---
 
 My previous post was an introduction to my first explorations in game engine development. In this post, I am laying down the foundation of the project. I will be using a tool that automatically creates Visual Studio solutions and Makefiles.

@@ -3,7 +3,7 @@ title: "Make your pointers smart - C++ good practices"
 date: 2018-02-28T21:05:41-06:00
 comments: true
 tags: [ "C++", "pointers"]
-categories: ["Development", "Tutorials"]
+categories: ["Cpp Development"]
 ---
 
 Ever since the C++ language was first standardized, `new` and `delete` were defined as the methods to create/delete objects dynamically. The `new` operator allocates a memory block to construct an object and then calls the proper class' constructor to initialize it. If successful, this operator will return a pointer to the location of the memory block. Otherwise, it will return `nullptr` or it will throw an exception. The `delete` operator executes the inverse operation, it deallocates object's memory block. Before freeing the memory, `delete` calls the object's destructor. The destructor is used to free memory that the object must delete.

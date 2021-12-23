@@ -3,7 +3,7 @@ title: "Game Engine Explorations: First steps"
 date: 2021-12-02T01:25:52+01:00
 draft: false
 tags: [ "C++"]
-categories: ["Game Engine", "Game development"]
+categories: ["Game Engine Explorations"]
 ---
 
 This post is the first one of a series of posts where I will document my learnings on Game Engine development.

@@ -3,7 +3,7 @@ title: "Source-to-source compilation with Lex-Yacc"
 date: 2017-07-15T10:43:23-06:00
 comments: true
 tags: ["Python", "Lex/Yacc", "Compilers"]
-categories: ["Development", "Projects"]
+categories: ["Small Projects"]
 ---
 In this post, I will describe a source-to-source compiler that transforms a Brainfuck program into its equivalent 64 bits assembly code. The assembly program can be built into a executable, thus allowing you to run Brainfuck programs natively.
 <!--more-->

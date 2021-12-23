@@ -3,7 +3,7 @@ title: "Building a basic C/C++ project template"
 date: 2017-04-17T10:41:16-06:00
 comments: true
 tags: [ "C++", "cmake", "templates"]
-categories: ["Development", "Tutorials"]
+categories: ["Building and testing Cpp code"]
 ---
 Starting a C/C++ project can be as easy or as difficult as you want. Personally, I don't like to fire up an IDE just for a small program. So, I end up using a text editor and compiling by terminal. However, the compilation process can get tedious. In this post, we will build a simple project template for a C/C++ program. This project will use the CMake tool to handle all the compilation process.
 <!--more-->

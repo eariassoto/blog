@@ -3,7 +3,7 @@ title: "Memory allocators in C++ - Part 1"
 date: 2020-09-09T23:28:52+02:00
 draft: false
 tags: [ "C++"]
-categories: ["Development", "Game development"]
+categories: ["Cpp Development"]
 ---
 When you want to instantiate a class or a struct in the dynamic memory space, we normally use the `new` and `delete` operators.
 

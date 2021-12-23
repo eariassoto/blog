@@ -3,7 +3,7 @@ title: "Test your C++ code with the Google Test framework"
 date: 2017-10-31T01:53:18Z
 draft: false
 tags: [ "C++", "cmake", "templates", "unit test"]
-categories: ["Development", "Tutorials"]
+categories: ["Building and testing Cpp code"]
 ---
 [In a previous post](https://eariassoto.github.io/2017/04/building-a-basic-c/c---project-template/), I showed you a C/C++ template that you can use for a project. I felt that it needed a basic testing framework. Therefore, we are going to learn how to install and use the Google Test framework to write tests. When we have finished this tutorial, we will have an executable that will run tests for our code.
 <!--more-->
