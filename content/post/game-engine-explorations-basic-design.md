@@ -267,4 +267,6 @@ Executing the current application will give as output:
 
 ![Base project structure](/static/img/engine_explorations/basic_design_1.png)
 
-No graphics so far, but I promise it will come out soon. In the next post, I will introduce `GLFW` and have the first window application running.
+No graphics so far, but I promise it will come out soon. You can find this project on my [Github](https://github.com/eariassoto/tamarindo_engine), and the code from this post is in this [commit](https://github.com/eariassoto/tamarindo_engine/tree/d25910a599ead4977cad546df3850bbe7db935dd).
+
+In the next post, I will introduce `GLFW` and have the first window application running. Thanks a lot for reading :).
