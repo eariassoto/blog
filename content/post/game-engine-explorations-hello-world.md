@@ -230,6 +230,6 @@ After running the script, my project folder will look like this:
 
 ![Base project structure](/static/img/engine_explorations/base_struct.PNG)
 
-I can run the executable from Visual Studio, or I can go and execute it in the `target` folder. You can find this project on my [Github](https://github.com/eariassoto/tamarindo_engine), and the code from this post is in this [commit]((https://github.com/eariassoto/tamarindo_engine/tree/a4ca92dbdb4bca9a467d26275929db3588e9f1e1).
+I can run the executable from Visual Studio, or I can go and execute it in the `target` folder. You can find this project on my [Github](https://github.com/eariassoto/tamarindo_engine), and the code from this post is in this [commit](https://github.com/eariassoto/tamarindo_engine/tree/a4ca92dbdb4bca9a467d26275929db3588e9f1e1).
 
 That is all for now, in the [next post](/post/game-engine-explorations-basic-design/), I will lay down the basic class hierarchy and main function for the engine. Thanks a lot for reading :).
