@@ -38,7 +38,7 @@ The engine layer is independent and can be reused in other application projects.
 
 As the diagram showed, the `main` function yields the execution to the engine layer entry point:
 
-{{<highlight cpp "linenos=inline">}}
+```c++
 // game_app/main.cpp
 #include "engine_lib/core/entry_point.h"
 
@@ -46,11 +46,11 @@ int main(int argc, char* argv[])
 {
     return tamarindo::main(argc, argv);
 }
-{{</highlight>}}
+```
 
 The `tamarindo::main` function is responsible of creating, initializing and starting the application:
 
-{{< highlight cpp "linenos=inline" >}}
+```c++
 // engine_lib/core/entry_point.h
 namespace tamarindo
 {
@@ -71,13 +71,13 @@ int main(int argc, char* argv[])
     return 0;
 }
 }  // namespace tamarindo
-{{< / highlight >}}
+```
 
 The `run` routine will take control of the execution and start the application's main loop. This may change in the future if I ever get to have multithreaded services.
  
 The `Application` class is in control of the graphical application. The application layer must create a derived class and override the abstract functions. The `Application` class call these functions to execute the logic code. In this first iteration, the class looks like this:
 
-{{< highlight cpp "linenos=inline" >}}
+```c++
 // engine_lib/core/application.h
 namespace tamarindo
 {
@@ -98,7 +98,7 @@ class Application
 };
 
 }  // namespace tamarindo
-{{< / highlight >}}
+```
  
 This class shows some patterns that I will use in this project. The base class implements the public API functions. These functions call the private virtual functions. The application layer is only required to implement them. These functions follow the naming convention  `do` + `base class function name`.
 
@@ -106,10 +106,10 @@ Another pattern that shows up here is the `initialize/terminate` functions. It i
 
 Finally, the application layer is also required to implement this function:
 
-{{< highlight cpp>}}
+```c++
 // engine_lib/core/application.h
 extern std::unique_ptr<tamarindo::Application> CreateApplication();
-{{< / highlight >}}
+```
 	
 As shown above, the entry point will use this function to create an instance of the application.
 
@@ -121,33 +121,33 @@ For this service, I will use the [`spdlog`](https://github.com/gabime/spdlog) li
 
 The first step is to clone the repository as a submodule. I will do it in the `sources/engine_lib/external` folder. This library can be used as a header-only library, or it can be compiled as a static library. For now, I will use it as header-only, so there is no need to create a premake file for it. To manage include folder paths, I will create the `premake/dependencies.lua` file. This file will declare a global hash map with paths relative to the root folder:
 
-{{< highlight lua "linenos=inline">}}
+```lua
 -- premake/dependencies.lua
 -- Copyright (c) 2021 Emmanuel Arias
 IncludeDir = {}
 IncludeDir["spdlog"] = "sources/engine_lib/external/spdlog/include"
-{{< / highlight >}}
+```
 
 Then I can include this file in the main `premake5.lua` file to make it available to all premake files:
 
-{{< highlight lua "linenos=inline">}}
+```lua
 -- premake/premake5.lua
 include "dependencies.lua"
-{{< / highlight >}}
+```
 
 And finally register the folder in the projects' premake files:
 
-{{< highlight lua "linenos=inline,hl_lines=4">}}
+```lua
 -- sources/engine_lib/premake5.lua
    includedirs {
       (ROOT .. PROJECT_ROOT .. "engine_lib"),
       (ROOT .. "%{IncludeDir.spdlog}")
    }
-{{</highlight>}}
+```
 
 As I mentioned before, the `Logger` class is the first of the `Application` components. Here is the first definition of it:
 
-{{<highlight cpp "linenos=inline,hl_lines=20 25-26">}}
+```c++
 // logging/logger.h
 namespace tamarindo
 {
@@ -166,13 +166,13 @@ class Logger
     static void provideInstance(Logger* instance);
 };
 }  // namespace tamarindo
-{{</highlight>}}
+```
 
 Here is another pattern that needs some explanation. More often than not, global resources are not recommended to use. But, some APIs are designed to be unique and accessed by many components. One example of these APIs is the logging service. Passing a pointer around for logging does not sound like a good decision. Here I am borrowing from a chapter in Robert Nystrom's "Game Programming Patterns" book. You can read it online [here](https://gameprogrammingpatterns.com/service-locator.html).
 
 I defined the `s_LoggerInstance` pointer in an anonymous namespace in `logger.cpp`. This will give the variable internal linkage, i.e. it will only be accessible by the translation unit. For more information, refer to [this link](https://docs.microsoft.com/en-us/cpp/cpp/namespaces-cpp?view=msvc-170#anonymous-or-unnamed-namespaces). The logging service instance will be accessible by a public getter in the Logger class.
 
-{{<highlight cpp "linenos=inline,hl_lines=4-7 11 16 23">}}
+```c++
 // logging/logger.cpp
 #include <iostream>
 
@@ -200,11 +200,11 @@ void Logger::provideInstance(Logger* instance)
 }
 
 }  // namespace tamarindo
-{{</highlight>}}
+```
 
 For now `spdlog` initialization is quite simple. I will output to the console with some simple formatting:
 
-{{<highlight cpp "linenos=inline">}}
+```c++
 // logging/logger.cpp
 void Logger::initialize()
 {
@@ -217,31 +217,31 @@ void Logger::initialize()
 }
 
 void Logger::terminate() { m_SpdLogger.reset(); }
-{{</highlight>}}
+{```
 
 The logging API functions are defined in the header, because they rely on templates:
 
-{{<highlight cpp "linenos=inline">}}
+```c++
 // logging/logger.h
 template <typename... Args>
 void trace(fmt::format_string<Args...> fmt, Args &&...args)
 {
     m_SpdLogger->trace(fmt, std::forward<Args>(args)...);
 }
-{{</highlight>}}
+```
 
 and to make things easier, I defined macros:
 
-{{<highlight cpp "linenos=inline">}}
+```c++
 // logging/logger.h
 #define TM_LOG_TRACE(...) ::tamarindo::Logger::getLogger()->trace(__VA_ARGS__)
-{{</highlight>}}
+```
 
 The API offer the logging levels `trace`, `info`, `debug`, `warn` and `error`.
 
 To test things, I added some logs to the `intialize` and `terminate` functions:
 
-{{<highlight cpp "linenos=inline,hl_lines=5 14">}}
+```c++
 bool Application::initialize()
 {
     // Initialize internal modules here
@@ -261,7 +261,7 @@ void Application::terminate()
     // Terminate internal modules here
     m_Logger.terminate();
 }
-{{</highlight>}}
+```
 
 Executing the current application will give as output:
 

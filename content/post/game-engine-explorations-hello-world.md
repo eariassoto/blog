@@ -25,7 +25,7 @@ This first iteration consists of an executable program that calls a function fro
 
 The main function is quite simple:
 
-```C++
+```c++
 #include "engine_lib/hello.h"
 
 int main(int /*argc*/, char* /*argv*/[])
@@ -88,21 +88,20 @@ To make things easier, I will create a `premake` folder that will hold the binar
 
 The default filename for Premake script files is`premake5.lua`. In this file, I will configure my main workspace. Premake generator translates this workspace to VS solutions and Makefiles. Let´s look this file by pieces:
 
-{{< highlight lua "linenos=inline,linenostart=1" >}}
+```lua
 -- Copyright (c) 2021 Emmanuel Arias
 local ROOT = "../"
-
-{{< / highlight >}}
+```
 
 Paths in Premake are relative to where the current `.lua` file is located. For consistent paths, I will define a local variable `ROOT` in every script. This variable will help me to share global path variables.
 
-{{< highlight lua "linenos=inline,linenostart=4" >}}
+```lua
 -- _ACTION is set to nil when premake is run but no generation is needed
 -- for example "premake5 -help"
 local gen_action = "NULL"
 if _ACTION ~= nill then gen_action = _ACTION end
 local GEN_FOLDER = ("generated/" .. gen_action .. "/")
-{{< / highlight >}}
+```
 
 Here I am setting up the folder where Premake will use to create the project files. Everything in this folder is generated and should be omitted by the version control system. `_ACTION` is a global variable set by Premake and it stores the action set by the user. You can find more info [here](https://premake.github.io/docs/_ACTION/). For example, if I execute these two commands:
 
@@ -113,18 +112,18 @@ Here I am setting up the folder where Premake will use to create the project fil
 
 I will get two folders: `generated/vs2019` and `generated/gmake` with two different and independent configurations. This also means that I will get separate folders with the binary files by the VS solutions and the Makefiles. 
 
-{{< highlight lua "linenos=inline,linenostart=10" >}}
+```lua
 -- Global variables
 PROJECT_ROOT = "/sources/%{prj.name}/"
 
 local OUTPUT_DIR = "%{cfg.buildcfg}-%{cfg.architecture}/"
 TARGET_FOLDER = (GEN_FOLDER .. "target/" .. "/%{prj.name}/" .. OUTPUT_DIR)
 INTERMEDIATE_FOLDER = (GEN_FOLDER .. "intermediate/" .. "/%{prj.name}/" .. OUTPUT_DIR)
-{{< / highlight >}}
+```
 
 Here I define global variables for the projects' lua scripts. Premake projects need to know where source files are and where to save internediate and output files. The `intermediate/` folder is not relevant for me, but `target/` will have all the executables and library files. The variables you see in between  `%{ }` are Premake tokens. These tokens are replaced in runtime and you can find more info [here](https://premake.github.io/docs/Tokens).
 
-{{< highlight lua "linenos=inline,linenostart=17" >}}
+```lua
 workspace "Tamarindo Engine"
    startproject "game_app"
    filename "tamarindo_engine"
@@ -151,20 +150,20 @@ workspace "Tamarindo Engine"
       "FatalWarnings",
       "MultiProcessorCompile"
    }
-{{< / highlight >}}
+```
 
 Now I start declaring the main workspace. It has simple configurations: it supports 32 and 64 bits architetures, and defines two optimization levels. For VS solutions, I can define a start-up project. This project will be the executable application.
 
-{{< highlight lua "linenos=inline,linenostart=44" >}}
+```lua
 include (ROOT .. "sources/engine_lib")
 include (ROOT .. "sources/game_app")
-{{< / highlight >}}
+```
 
 Finally, I need to include the two projects: the engine library and the application. Premake expects `premake5.lua` files in both of those folders.
 
 The script for the engine library is quite simple:
 
-{{< highlight lua "linenos=inline,hl_lines=5 " >}}
+```lua
 -- Copyright (c) 2021 Emmanuel Arias
 local ROOT = "../../"
 
@@ -185,11 +184,11 @@ project "engine_lib"
     includedirs {
       (ROOT .. PROJECT_ROOT .. "engine_lib")
     }
-{{< / highlight >}}
+```
 
 This script is very self-explanatory. From this snippet, I like that the `kind` command makes configuration easier. The application project script has few differences:
 
-{{< highlight lua "linenos=inline,hl_lines=5 19 22-24" >}}
+```lua
 -- Copyright (c) 2021 Emmanuel Arias
 local ROOT = "../../"
 
@@ -214,7 +213,7 @@ project "game_app"
     links {
         "engine_lib"
     }
-{{< / highlight >}}
+```
 
 
 Last thing I need to make things easier is to create a batch script to run Premake.

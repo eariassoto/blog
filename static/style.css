@@ -1,0 +1,34 @@
+.archive__group-date-header {
+    margin: 5px 0;
+    opacity: .5;
+    width: 130px;
+}
+
+.archive__group-month {
+    margin-right: 25%;
+    padding: 0 !important;
+    font-size: .95rem;
+}
+
+.archive__post {
+    padding: 5px 0 !important;
+}
+
+.intro {
+    width: 100%;
+    max-width: 800px;
+    text-align: left;
+    padding: 20px 0px 20px 0px;
+}
+
+.archive__table {
+    margin-top: 20px 0;
+}
+
+.content {
+    margin: 0;
+}
+
+.footer .copyright {
+    font-size: 0.8rem;
+}

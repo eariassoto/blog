@@ -1,65 +1,66 @@
 baseURL = "https://eariassoto.github.io"
-title = "Emmanuel Arias"
-theme = "hugo-notepadium"
-copyright = "©2017-2021 Emmanuel Arias."
+languageCode = "en-us"
+theme = "hugo-theme-hello-friend"
+paginate = 5
 
-languageCode = "en"  # for the RSS generation
-defaultContentLanguage = "en"
-
-hasCJKLanguage = true
-
-enableRobotsTXT = true
-
-# Enable Disqus
-#disqusShortname = "XXX"
-
-# Google Analytics
-#googleAnalytics = "UA-123-45"
-
-[markup]
-  [markup.highlight]
-    codeFences = true
-    guessSyntax = false
-    hl_Lines = ""
-    lineNoStart = 1
-    lineNos = false
-    lineNumbersInTable = true
-    noClasses = true
-    style = "solarized-dark"
-    tabWidth = 4
-
-[markup.goldmark.renderer]
-unsafe = true  # enable raw HTML in Markdown
+rssLimit = 20
 
 [params]
-style = "auto"  # default: auto. light: light theme, dark: dark theme, auto: based on system.
-dateFormat = "Jan 02, 2006"  # if unset, default is "2006-01-02"
-readingTime = false  # show reading time after article date
-logo = ""
-slogan = "A software developer looking for his <span style='font-family: monospace;'>$PATH</span>"
-#license = "<a rel=license href=http://creativecommons.org/licenses/by-nc-sa/4.0/><img alt=Creative Commons License style=border-width:0 src=https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png /></a><br />This work is licensed under a <a rel=license href=http://creativecommons.org/licenses/by-nc-sa/4.0/>Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>."
+  # dir name of your blog content (default is `content/posts`).
+  # the list of set content will show up on your index page (baseurl).
+  contentTypeName = "post"
 
-[params.comments]
-enable = false  # En/Disable comments globally, default: false. You can always enable comments on per page.
+  # "light" or "dark"
+  defaultTheme = "dark"
 
-[params.share]
-enable = false  # En/Disable share globally, default: false. You can always enable share on per page.
-addThisId = ""
-inlineToolId = ""
+  # if you set this to 0, only submenu trigger will be visible
+  showMenuItems = 2
 
-[params.math]
-enable = false # load math globally, default: false. You can always enable math on per page.
-use = "katex"  # builtin: "katex", "mathjax".  default: "katex"
+  # Show reading time in minutes for posts
+  showReadingTime = false
 
-[params.syntax]
-use = "none"  # builtin: "prismjs", "hljs". "none" means Chroma
-theme = "xcode"
-darkTheme = "xcode-dark"
+  # Show table of contents at the top of your posts (defaults to false)
+  # Alternatively, add this param to post front matter for specific posts
+  # toc = true
 
-[params.nav]
-showCategories = true       # /categories/
-showTags = false             # /tags/
+  # Show full page content in RSS feed items
+  #(default is Description or Summary metadata in the front matter)
+  # rssFullText = true
+  css = [ "css/custom.css" ]
 
-#[[params.nav.custom]]
-#title = "About"
-#url = "/about/"
+[languages]
+  [languages.en]
+    title = "Emmanuel Arias"
+    subtitle = "Blog"
+    keywords = ""
+    copyright = ""
+    menuMore = "Show more"
+    writtenBy = "Written by"
+    readMore = "Read more"
+    readOtherPosts = "Read other posts"
+    newerPosts = "Newer posts"
+    olderPosts = "Older posts"
+    minuteReadingTime = "min read"
+    dateFormatSingle = "2006-01-02"
+    dateFormatList = "2006-01-02"
+    # leave empty to disable, enter display text to enable
+    # lastModDisplay = ""
+
+    [languages.en.params.logo]
+      logoText = "Emmanuel Arias"
+      logoHomeLink = "/"
+      cursor = false
+    # or
+    #
+    # path = "/img/your-example-logo.svg"
+    # alt = "Your example logo alt text"
+
+    [languages.en.menu]
+      #[[languages.en.menu.main]]
+      #  identifier = "about"
+      #  name = "About me"
+      #  url = "/about"
+      #[[languages.en.menu.main]]
+      #  identifier = "projects"
+      #  name = "Projects"
+      #  url = "/projects"

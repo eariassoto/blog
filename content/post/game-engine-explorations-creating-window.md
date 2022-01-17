@@ -2,6 +2,8 @@
 title: "Game Engine Explorations: Creating the Window and rendering a simple mesh"
 date: 2021-12-27T18:19:15+01:00
 draft: false
+tags: [ "C++"]
+categories: ["Game Engine Explorations"]
 ---
 
 At this point, I can take the project to the graphical world. In this post, I will describe how the engine is creating and handling the window. I will also introduce an early model of the shader program and a simple mesh to render a rectangle in the window.
@@ -12,7 +14,7 @@ At this point, I can take the project to the graphical world. In this post, I wi
 
 I want this project to compile in both Windows and GNU/Linux platforms. I would also like in the future to move the rendering pipeline from OpenGL to Vulkan. Because of this, I chose GLFW to create and handle windows. I forked the project from the official [Github repo](https://github.com/glfw/glfw) to add my own premake file. This premake file uses filters to include the implementation specific source files:
 
-{{<highlight lua>}}
+```lua
 -- sources/engine_lib/external/glfw/premake5.lua
    filter "system:linux"
       pic "On"
@@ -33,7 +35,7 @@ I want this project to compile in both Windows and GNU/Linux platforms. I would 
          "_GLFW_WIN32", -- Define platform
          "_CRT_SECURE_NO_WARNINGS"
       }
-{{</highlight>}}
+```
 
 The other library that I need is `Glad`. It is a generated OpenGL loader library. There is a [web service](https://glad.dav1d.de/) that generated the proper source files. After that, it is only needed to add it to the engine project as another static library. I generated one for the OpenGL version 4.6.
 
@@ -41,7 +43,7 @@ The other library that I need is `Glad`. It is a generated OpenGL loader library
 
 There are many questions when it comes to creating a window: how big should it be? Should it have a title? What color is the background? Is it resizable? Etc. I want to keep all these descriptions in a single struct. That way, I could in the future load these settings from the main function arguments, or from a file. For now, the struct has the minimal settings:
 
-{{<highlight cpp "linenos=inline">}}
+```c++
 // engine_lib/core/window_manager.h
 struct WindowProperties {
     std::string Title;
@@ -54,11 +56,11 @@ struct WindowProperties {
     WindowProperties(const std::string& title = "Application",
                      unsigned int width = 800, unsigned int height = 600);
 };
-{{</highlight>}}
+```
 
 The Application layer should provide these settings by overriding this private function:
 
-{{<highlight cpp "linenos=inline">}}
+```c++
 // engine_lib/core/application.h
 class Application
 {
@@ -67,11 +69,11 @@ class Application
     virtual const WindowProperties& getWindowProperties() const = 0;
     // ...
 };
-{{</highlight>}}
+```
 
 In comparison to other APIs, OpenGL is easy to initialize and use. The `WindowManager` class controls both the graphical window and the OpenGL context management. It may be that in the future I will separate this class, in the case I introduce a different rendering API.
 
-{{<highlight cpp "linenos=inline,hl_lines=8-9 11">}}
+```c++
 // engine_lib/core/window_manager.h
 class WindowManager
 {
@@ -89,7 +91,7 @@ class WindowManager
 
     static void glfwErrorCb(int error, const char* desc);
 };
-{{</highlight>}}
+```
 
 This class is also declared and managed as a component from the `Application` class. The application main loop will call the functions `processEvents`, `swapBuffers`, and `shouldWindowClose`.  The main loop, also called game loop, is the application's orchestrator. It takes execution control to call the logic code and render the application.
 
@@ -97,7 +99,7 @@ This class is also declared and managed as a component from the `Application` cl
 
 I do not plan to have physics simulation yet, so I will keep the game loop as simple as possible. When I get into physics simulations, I will follow the advice from the popular article: ["Fix your timelines"](https://gafferongames.com/post/fix_your_timestep/). This first game loop will measure the elapsed time and pass it to an update function.
 
-{{<highlight cpp "linenos=inline,hl_lines=20 25">}}
+```c++
 // engine_lib/core/application.cpp
 void Application::run()
 {
@@ -126,11 +128,11 @@ void Application::run()
         m_WindowManager.swapBuffers();
     }
 }
-{{</highlight>}}
+```
 
 Another behavior that I do not find ideal is to delegate the rendering to the Application layer. I will create a proper rendering manager, but that can wait. For now, I have declared these virtual functions:
 
-{{<highlight cpp "linenos=inline">}}
+```c++
 // engine_lib/core/application.h
 class Application
 {
@@ -140,13 +142,13 @@ class Application
     virtual void doRender() = 0;
     // ...
 };
-{{</highlight>}}
+```
 
 # Implementing shaders and meshes
 
 OpenGL uses the GLSL language to create shaders. They can be compiled in runtime. For simplicity, that is why I am going to do in this first iteration. I declared a namespace to compile a shader program and get an ID for it.
 
-{{<highlight cpp "linenos=inline">}}
+```c++
 // engine_lib/rendering/shader_program.h
 typedef unsigned int ShaderProgramID;
 
@@ -160,11 +162,11 @@ void bindShader(ShaderProgramID shader_program);
 void terminateShader(ShaderProgramID shader_program);
 
 }  // namespace ShaderProgram
-{{</highlight>}}
+```
 
 The `createNewShader` takes the code for both shaders. In the future, I will create a resources manager that can read files from disk. That way, the application layer can register a shader and the engine layer will compile it.
 
-{{<highlight cpp "linenos=inline">}}
+```c++
 // game_app/game_app.cpp
 bool GameApp::doInitialize()
 {
@@ -196,11 +198,11 @@ bool GameApp::doInitialize()
     // ...
     return true;
 }
-{{</highlight>}}
+```
 
 The next thing that I need is a basic Mesh class. This call will accept a "hard coded" format for the vertex input. For this, I mean that the vertex input data consists of positions and UV points:
 
-{{<highlight cpp "linenos=inline">}}
+```c++
 // engine_lib/rendering/mesh.h
 struct MeshInstanceID {
     unsigned int VertexAttrArray;
@@ -233,11 +235,11 @@ struct Mesh
     static constexpr int VERTEX_ATTR_POS_OFFSET = 0;
     static constexpr int VERTEX_ATTR_UV_OFFSET = 3 * sizeof(float);
 };
-{{</highlight>}}
+```
 
 I will make this more flexible in the future, but for now this is good enough to define a simple square mesh. This is also done in the application layer, for now:
 
-{{<highlight cpp "linenos=inline">}}
+```c++
 // game_app/game_app.cpp
 bool GameApp::doInitialize()
 {
@@ -286,24 +288,24 @@ bool GameApp::doInitialize()
 
     return true;
 }
-{{</highlight>}}
+```
 
 ## Putting it all together
 
 That is all I require for now to simple render a rectangle. The rendering code only needs to know the shader program and the mesh instance:
 
-{{<highlight cpp "linenos=inline">}}
+```c++
 // game_app/game_app.cpp
 void GameApp::doRender()
 {
     ShaderProgram::bindShader(m_ShaderProgram);
     Mesh::renderMeshInstance(m_RectMeshInstance);
 }
-{{</highlight>}}
+```
 
 These functions are in charge of calling the OpenGL API functions:
 
-{{<highlight cpp "linenos=inline">}}
+```c++
 // engine_lib/rendering/shader_program.cpp
 void bindShader(ShaderProgramID shader_program)
 {
@@ -318,7 +320,7 @@ void bindShader(ShaderProgramID shader_program)
                    0);
     glBindVertexArray(0);
 }
-{{</highlight>}}
+```
 
 Executing the application finally shows some graphics:
 
@@ -328,11 +330,11 @@ There are two things to notice here. The mesh vertices should render a square, b
 
 The second thing is about the colors of the rectangle. I am using the vertex's UV coordinates to output the vertex color in the fragment shader. I intended to do this to test that the vertices are properly rendered. Notice again the fragment shader:
 
-{{<highlight glsl "linenos=inline">}}
+```glsl
 void main() {
     FragColor = vec4(UVs.x, UVs.y, 0.0f, 1.0f);
 };
-{{</highlight>}}
+```
 
 The top left corner of the rectangle is black because the UV coordinates are (0,0). In contrary, the bottom-right UV coordinates are (1.0, 1.0), so they completely combine red and green. The other two corners interpolate to the red and green colors. This UV coordinates will be useful later to apply textures to the meshes.
 
